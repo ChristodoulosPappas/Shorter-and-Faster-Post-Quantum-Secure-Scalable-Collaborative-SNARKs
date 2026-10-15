@@ -1,0 +1,67 @@
+#pragma once
+#include "coPIOP.h"
+#include "sparse_eval.hpp"
+#include "config_pc.hpp"
+#include "utils.hpp"
+#include "math.h"
+#include <mpi.h>
+#include "timer.hpp"
+
+extern timer network_timer;
+
+
+F F_ip(vector<F> &data, vector<F> &v1, vector<F> &v2, int k, int _k, int N);
+F F_ip_prod(vector<F> &data1, vector<F> &data2, vector<F> &v1, vector<F> &v2, int k, int _k, int N);
+quadratic_poly aggregate_quadratic_poly(quadratic_poly H, vector<F> &v, int k, int _k, int N);
+cubic_poly aggregate_cubic_poly(cubic_poly H, vector<F> &v, int k, int _k, int N);
+
+vector<pair<F,vector<F>>> F_zero_check_rest(vector<F> &v1, vector<F> &v2, vector<F> &v3,vector<F> &h1, vector<F> &h2, 
+                                            vector<F> &beta1, vector<F> &beta2, 
+                                            F b, F y, int k, int _k, int N);
+quadratic_poly aggregate_quadratic_poly(quadratic_poly H, int k, int _k, int N);
+
+vector<pair<F,vector<F>>> F_batch_sumcheck_rest(F v1, F v2, F v3, F v4, F h1, F h2, 
+                                            F b, F y, int k, int _k, int N);
+
+F distributed_eval(vector<F> &poly, vector<F> &beta1, vector<F> &beta2, int N);
+vector<F> batch_distributed_eval(vector<vector<F>> &poly, vector<F> &beta1, vector<F> &beta2, int N);
+void distribute_index(int N, int M,vector<sparse_eval_data> &index, int type=0);
+void distribute_index_even_odd(int N, int M,vector<sparse_eval_data> &index, int type);
+void distribute_proving_data(vector<F> &vL, vector<F> &vR, vector<F> &vO, vector<F> &w, int N, int M, int _k, int k, int cir_type=0);
+void setup_randomness(vector<F> &R, int N, int _k, int k,int size);
+void compute_secret_shares(vector<F> &v, vector<vector<F>> &v_shares, int N, int k, int _k, bool privacy_preserving);
+vector<F> batch_ip(vector<vector<F>> &arr, vector<vector<vector<F>>> &v, int N, int k,int _k);
+vector<pair<F,vector<F>>> F_quadratic_sumcheck_rest(F v1, F v2, F y, int k, int _k, int N);
+vector<F> batch_distributed_eval_opt(vector<vector<F>> &poly, vector<F> r1, vector<F> r2, int N);
+void secret_share_coefficients(vector<F> &w, int M, int N, int _k, int k);
+void myBcast(vector<u64> &data, int N);
+vector<quadratic_poly> batch_aggregate(vector<quadratic_poly> H, vector<vector<F>> v2, vector<bool> secret_shared, vector<int> rounds,vector<int> k, int round, int N);
+void myAlltoAll(vector<u64> &in, vector<u64> &out, int N, int total_size);
+vector<F> unpack_secret_share(vector<F> &secret, int _k, int k);
+void RS_multifold(vector<F> &codeword, vector<F> a);
+void distributed_FFT(vector<F> &arr, int logn, bool flag, int N);
+void send_codeword(vector<F> &arr, vector<F> &B,vector<F> &codeword, int fold_depth, int N);
+void get_even_odd_data(vector<F> &data, vector<F> &data_even_odd, int N);
+vector<pair<F,vector<F>>> compute_evaluation_claims(vector<vector<F>> &p,  vector<F> r, vector<int> degrees, int N);
+vector<F> send_data(vector<F> &data, int N);
+F F_sum(F K, int N);
+void distributed_batch_FFT(vector<vector<F>> &arr, int logn, bool flag, int N);
+vector<F> aggregate_plaintext_poly(vector<F> poly, int N);
+vector<vector<F>> aggregate_plaintext_poly_batch(vector<vector<F>> poly, int N);
+void myBcast(vector<u8> &data, int N);
+void send_codeword_batch(vector<vector<F>> &arr, vector<vector<F>> &B,vector<vector<F>> &codeword, int fold_depth, int N);
+vector<F> pcs_sumcheck_aggr(vector<F> &poly, int N);
+void get_segments(vector<F> &y,vector<vector<F>> &segments, vector<vector<u32>> &queries, int l, int N, int degree);
+void get_segments_new(vector<F> &y,vector<vector<F>> &segments, vector<vector<u32>> &queries, int l, int N, int degree);
+//void get_segments(vector<F> &y,vector<vector<F>> &segments, vector<vector<u32>> &queries, int l, int N);
+void send_pcs_data(vector<F> &arr, vector<F> &B, vector<F> &codeword, 
+                    vector<vector<F>> &total_arr, vector<vector<F>> &total_B,
+                    vector<vector<F>> &C, int N);
+vector<F> sumcheck_aggr(vector<F> &poly, vector<F> &b, int N);
+vector<vector<F>> send_final_sumcheck_poly(vector<F> s, int N);
+F generate_sumcheck_randomness(vector<vector<vector<F>>> &R, vector<int> degrees1, vector<int> degrees2, int N);
+F compute_Kr(vector<vector<F>> &R, vector<F> b, int N);
+F sum2(F s, int N);
+void get_evals(vector<F> &y, vector<vector<u32>> &queries, int l, int N);
+vector<double> send_performance_data(vector<double> arr, int N);
+F sum3(F s, int N);

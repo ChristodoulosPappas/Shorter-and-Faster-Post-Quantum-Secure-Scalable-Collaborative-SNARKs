@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.10)
+project(ProofOfLearning)
+
+find_package(MPI REQUIRED)
+#find_package(OpenMP REQUIRED)
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_FLAGS "-w -O3 -march=native -mavx -msha")
+set(CMAKE_C_FLAGS "-w -O3 -march=native -mavx -msha")
+
+
+
+link_directories(lib)
+link_directories(Blake)
+
+include_directories(src)
+include_directories(lib)
+include_directories(Blake)
+
+add_subdirectory(src)
+add_subdirectory(Blake)
+
